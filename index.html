@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hikaru's Portfolio</title>
+  <!-- CSSの読み込み -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="card">
+    <!-- プロフィール画像 -->
+    <img src="profile.jpg" alt="プロフィール写真" class="avatar">
+    
+    <!-- 名前と肩書 -->
+    <h1>Hikaru</h1>
+    <p class="subtitle">写真撮影とWeb制作が趣味の学生・ガジェット愛好家</p>
+    
+    <!-- 自己紹介文 -->
+    <section class="about">
+      <h2>About Me</h2>
+      <p>はじめまして！写真撮影とWeb制作が趣味の学生です。ちなみにガジェット愛好家でもあります。<br>写真撮影は今年で3年目です。<br>Web制作は初心者ですが、AIを使いながら学び、公開しています。ただ、AIを使いすぎて、実際の僕の技術力とは程遠いです(笑)<br>一番僕の技術力と近いのはこのプロフィールサイトです！<br>ですが基本、AIが書いてくれたコードを見てそこから学ぶの繰り返しです。<br>更新頻度には波があるかもしれませんが、できるだけ定期的に更新していきます。</p>
+      <p>PC: NEC VersaPro VKV18<br>モニター: Xiaomi モニター A22i<br>カメラ: Canon EOS Kiss X7<br>スマホ: Pixel8a</p>
+    </section>
+
+    <!-- SNSリンク枠 -->
+    <section class="sns-links">
+      <h2>SNS / Link</h2>
+      <div class="sns-buttons">
+        <a href="https://github.com/ARCHI5474" target="_blank" rel="noopener noreferrer" class="sns-btn x-btn"> GitHub</a>
+        <a href="https://forms.gle/AvMFv3iJNGX6YhEH7" target="_blank" rel="noopener noreferrer" class="sns-btn insta-btn">Webサイトお問い合わせフォーム</a>
+      </div>
+    </section>
+
+    <!-- ギャラリー領域 -->
+    <section class="gallery">
+      <h2>Webサイトギャラリー</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="PasideaSpace.png" alt="作品1">
+        </div>
+        <div class="gallery-item">
+          <img src="LifeTop.png" alt="作品2">
+        </div>
+        <div class="gallery-item">
+          <img src="BrowTop.png" alt="作品3">
+        </div>
+        <div class="gallery-item">
+          <img src="KinloveAI.png" alt="作品4">
+        </div>
+      </div>
+
+      <p><strong>■PasideaSpace</strong><br>僕が管理しているWebサービスの総称(ブランド名)です。</p>
+      <p><strong><a href="https://lifetop.pasidea.space/">■LifeTop</a></strong><br>いつものサイトにすぐアクセスできる、便利なリンク集型生活総合ポータルサイトです。</p>
+      <p><strong><a href="https://browtop.pasidea.space/">■BrowTop</a></strong><br>ブラウザのスタートページにすると便利な、便利なリンク集型ポータルサイトです。</p>
+      <p><strong>■KinloveAI</strong><br>GeminiAPIを用いた、便利なAIアシスタントです。現在開発中です。</p>
+
+      <!--<p style="text-align: right;">
+        <a href="https://example.com" target="_blank" rel="noopener noreferrer">すべてのWebサイトを見る▶</a>
+      </p>
+    </section>-->
+
+
+    <!-- ブログ枠 -->
+    <section class="blog">
+      <h2>My Blog</h2>
+      <div id="blog-list">
+        <p>記事を読み込み中...</p>
+      </div>
+      <p style="text-align: right;">
+        <a href="https://archiwebphoto.blogspot.com" target="_blank" rel="noopener noreferrer">ブログ一覧を見る▶</a>
+      </p>
+    </section>
+
+  </main>
+
+  <script>
+    // ご自身のBloggerのRSSフィードURLを指定（修正済み）
+    const rssUrl = 'https://archiwebphoto.blogspot.com/feeds/posts/default?alt=rss';
+    const feedUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+    fetch(feedUrl)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('blog-list');
+        
+        // データの取得チェック
+        if (data.status !== 'ok' || !data.items || data.items.length === 0) {
+          container.innerHTML = '<p>まだ記事がないか、読み込めませんでした。</p>';
+          return;
+        }
+
+        container.innerHTML = ''; // 読み込み中表示を消す
+
+        // 最新の3件を取得して表示
+        const posts = data.items.slice(0, 3);
+
+        posts.forEach(post => {
+          const date = new Date(post.pubDate).toLocaleDateString('ja-JP');
+
+          const postElement = document.createElement('div');
+          postElement.className = 'blog-item';
+          postElement.style.marginBottom = '12px';
+          postElement.innerHTML = `
+  <div style="display: flex; gap: 10px; align-items: center; text-align: left;">
+    <span style="font-size: 12px; color: #888; white-space: nowrap;">${date}</span>
+    <a href="${post.link}" target="_blank" rel="noopener noreferrer" style="font-weight: bold; color: #0066cc; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+      ${post.title}
+    </a>
+  </div>
+`;
+          container.appendChild(postElement);
+        });
+      })
+      .catch(error => {
+        document.getElementById('blog-list').innerHTML = '<p>記事の読み込みに失敗しました。</p>';
+      });
+  </script>
+
+</body>
+</html>
